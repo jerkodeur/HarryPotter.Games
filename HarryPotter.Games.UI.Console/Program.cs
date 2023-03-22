@@ -1,106 +1,180 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿#region PROPERTIES
+// Game general info
+const string TITLE = "Harry Potter";
+const string SUBTITLE = "Un jeu épique !";
+string[] menuItems = { "nouvelle partie", "charger partie", "crédits", "quitter"};
+string[] menuWeapons = { "gun", "bow", "crossbow", "machinegun"};
 
-using System.Diagnostics;
-using System.Globalization;
+// Game initial values
+int[,] gameGrid = new int[20, 20];
+const int MIN_AGE = 12;
 
-string title = "Harry Potter";
-string subtitle = "un jeu épique !";
-string[] menuItems =
-    {
-        "Nouvelle partie",
-        "Charger partie",
-        "Crédits",
-        "Quitter",
-    };
-int minAge = 12;
+// Player infos
+Player player;
 
-string playerName;
-DateOnly playerBirthday;
-int playerAge;
+#endregion PROPERTIES
+#region ACTIONS
+DisplayGameInfos();
+GetPlayerInfos();
+PlayerActions();
+//GetPlayerGameMainMenuSelection();
+//GetPlayerDefaultWeapon();
+//InitializeGameGrid();
+//DisplayCredits();
 
-Console.WriteLine($"{title}, {subtitle.Substring(0, subtitle.Length - 2)}");
-
-// ---- SAISIE INFORMATIONS JOUEURS / JOUEUSE ------
-playerName = getPlayerName();
-playerAge = getPlayerAge();
-
-if (!hasRequiredAge())
+#endregion ACTIONS
+#region METHODS
+void DisplayGameInfos()
 {
-    throw new Exception($"\nTu n'as pas l'age requis pour jouer à ce jeu vidéo {playerName}, reviens plus tard !");
+    Console.WriteLineWithColors($"{TITLE}, {SUBTITLE.Substring(0, SUBTITLE.Length - 2)}", ConsoleColor.Yellow);
 }
 
-playerBirthday = getPlayerBirthday();
-
-int menuItemSelectedByPlayer = getPlayerMenuChoice();
-Console.WriteLine($"\nVous avez choisi {menuItems[menuItemSelectedByPlayer]}");
-
-// METHODS
-string getPlayerName()
+void GetPlayerInfos()
 {
-    string inputName = getPlayerInput("\nQuel est ton nom ?");
+    player = new Player(GetPlayerBirthday());
+
+    if (!HasRequiredAge())
+    {
+        throw new Exception($"\nTu n'as pas l'age requis pour jouer à ce jeu vidéo {player.Name}, reviens Quand tu seras plus grand !");
+    }
+
+    player.Name = GetPlayerName();
+
+}
+
+string GetPlayerName()
+{
+    string inputName = GetPlayerInput("\nQuel est ton nom ?");
 
     return inputName;
 }
 
-int getPlayerAge()
+DateOnly GetPlayerBirthday()
 {
-    string inputAge = getPlayerInput("\nQuel est ton age ?");
+    string inputBirthday = GetPlayerInput("\nQuel est ta date de naissance ? (jj/mm/aaaa)");
+    DateOnly playerBirthday;
 
-    // Convertit une string en integer
-    int playerAge = int.Parse(inputAge);
+    if (!DateOnly.TryParseExact(inputBirthday, "d/M/yyyy", out playerBirthday))
+    {
+        Console.WriteErrorLine("Le format de la date de naissance n'est pas au bon format, veuillez recommencer.");
+        return GetPlayerBirthday();
+    }
 
-    return playerAge;
+    return playerBirthday;
 }
 
-DateOnly getPlayerBirthday()
+void GetPlayerGameMainMenuSelection()
 {
-    string inputBirthday = getPlayerInput("\nQuel est ta date de naissance ?");
-
-    return DateOnly.Parse(inputBirthday);
+    int menuItemSelectedByPlayer = GetPlayerMenuChoice("Quelle action souhaitez-vous réaliser ? [0-3]", menuItems);
+    Console.WriteConfirmationLine($"Vous avez choisi {menuItems[menuItemSelectedByPlayer]}");
 }
 
-bool hasRequiredAge()
+void GetPlayerDefaultWeapon()
 {
-    return playerAge.CompareTo(minAge) >= 0;
+    player.DefaultWeapon = menuWeapons[GetPlayerMenuChoice("Avec quelle arme souhaitez-vous démarrer la partie ? [0-3]", menuWeapons)];
+    Console.WriteConfirmationLine($"Vous avez choisi {player.DefaultWeapon} pour débuter la partie\n");
 }
 
-string getPlayerInput(string question = null)
+int GetPlayerMenuChoice(string question, string[] items)
+{
+    string playerChoiceInput;
+    int playerSelectedIndex;
+
+    DisplayMenu(items);
+
+    playerChoiceInput = GetPlayerInput(question);
+
+    if (!int.TryParse(playerChoiceInput, out playerSelectedIndex))
+    {
+        Console.WriteErrorLine("Le format de l'index n'est pas valide, veuillez recommencer.");
+        return GetPlayerMenuChoice(question, items);
+    } 
+    else if(playerSelectedIndex < 0 || playerSelectedIndex > menuItems.Length -1)
+    {
+        Console.WriteErrorLine("L'index sélectionné n'est pas un index valide, veuillez recommencer.");
+        return GetPlayerMenuChoice(question, items);
+    }
+
+    return playerSelectedIndex;
+}
+
+string GetPlayerInput(string question = "")
 {
     string input = "";
 
-    while (input == "")
+    do
     {
-        if (question != null) Console.WriteLine(question);
-        input = Console.ReadLine();
+        if (!string.IsNullOrEmpty(question))
+        {
+            Console.WriteQuestionLine(question);
+        }
+
+        input = Console.ReadLineWithColors();
     }
+    while (string.IsNullOrWhiteSpace(input));
 
     return input;
 }
 
-int getPlayerMenuChoice()
+bool HasRequiredAge()
 {
-    string playerChoiceInput = "";
-    string menuItemFormat = "{0} . {1}";
+    return player.Age.CompareTo(MIN_AGE) >= 0;
+}
 
-    Console.WriteLine("\n");
+void InitializeGameGrid()
+{
+    const int IS_FREE_LOCATION = -1;
+
+    {
+        for (int i = 0; i < gameGrid.GetLength(0); i++)
+        {
+
+            for (int j = 0; j < gameGrid.GetLength(1); j++)
+            {
+                gameGrid[i, j] = IS_FREE_LOCATION;
+            }
+        }
+    }
+}
+
+void DisplayCredits()
+{
+    Console.WriteLineWithColors("=======================================", ConsoleColor.Green);
+    Console.WriteLineWithColors("Jérôme Potié alias Jéjé. Copyright 2023", ConsoleColor.Yellow);
+    Console.WriteLineWithColors("=======================================", ConsoleColor.Green);
+}
+
+void DisplayMenu(string[] menuItems)
+{
+    DotNetConsole.WriteLine("\n");
 
     foreach (var item in menuItems.Select((value, i) => (value, i)))
     {
-        Console.WriteLine(menuItemFormat, item.i, item.value);
+        Console.WriteMenuItemsLine(item.i, item.value);
     }
-
-    playerChoiceInput = getPlayerInput("\nQue souhaitez-vous faire ?");
-
-    return int.Parse(playerChoiceInput);
 }
 
-// ------  Partie Test
-Console.WriteLine("\nTests...\n\n");
+void PlayerActions()
+{
+    DotNetConsole.WriteLine("\n");
+    Ennemy ennemy = new Ennemy("Dark Vador");
+
+    player.Move();
+    player.Attack(ennemy, 20);
+}
+
+#endregion Methods
+#region TESTS
+// ---------------  PARTIE TESTS -----------------------------
+DotNetConsole.WriteLine("\nTests...\n\n");
+
 // Déclarer une décimale
-decimal gunPower = 10.5m;
+//decimal gunPower = 10.5m;
 
 // Convertit implicitement un décimal en int et l'arrondi à la valeur inférieure
 //! ATTENTION, un int à un min et max inférieur à un décimal, un erreur peut se produire
-int decimalToInt = (int)gunPower;
+//int decimalToInt = (int)gunPower;
+//DotNetConsole.WriteLine(gunPower);
 
-Console.WriteLine(gunPower);
+//DotNetConsole.WriteLine($"Le tableau est composé de {gameGrid.GetLength(0)} lignes et de {gameGrid.GetLength(1)} colonnes");
+#endregion

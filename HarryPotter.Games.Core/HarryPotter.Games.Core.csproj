@@ -1,7 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -9,12 +8,10 @@
 
   <ItemGroup Label="References">
     <ProjectReference Include="..\..\JerkoLibs.Core\JerkoLibs.Core.csproj" />
-    <ProjectReference Include="..\HarryPotter.Games.Core\HarryPotter.Games.Core.csproj" />
   </ItemGroup>
 
 
   <ItemGroup Label="Usings">
-	<Using Include="HarryPotter.Games.Core" />
 	<Using Include="JerkoLibs.Core.Console" Alias="Console" />
 	<Using Include="System.Console" Alias="DotNetConsole" />
   </ItemGroup>
