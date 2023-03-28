@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,14 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup Label="References">
+  <ItemGroup>
     <ProjectReference Include="..\..\JerkoLibs.Core\JerkoLibs.Core.csproj" />
+    <ProjectReference Include="..\HarryPotter.Games.Core.Interfaces\HarryPotter.Games.Core.Interfaces.csproj" />
   </ItemGroup>
 
-
   <ItemGroup Label="Usings">
-	<Using Include="JerkoLibs.Core.Console" Alias="Console" />
-	<Using Include="System.Console" Alias="DotNetConsole" />
+	<Using Include="JerkoLibs.Core.Console.Console" Alias="CoreConsole" />
+	<Using Include="JerkoLibs.Core" />
+	<Using Include="JerkoLibs.Core.Console" />
   </ItemGroup>
 
 </Project>

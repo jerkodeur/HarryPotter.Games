@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,17 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup Label="References">
+  <ItemGroup>
     <ProjectReference Include="..\..\JerkoLibs.Core\JerkoLibs.Core.csproj" />
     <ProjectReference Include="..\HarryPotter.Games.Core\HarryPotter.Games.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Label="Usings">
-	<Using Include="HarryPotter.Games.Core" />
-	  <Using Include="JerkoLibs.Core.Console.Console" Alias="CoreConsole" />
-	  <Using Include="System.Console" Alias="Console" />
-	<Using Include="JerkoLibs.Core.Console" />
-	<Using Include="JerkoLibs.Core" />
   </ItemGroup>
 
 </Project>

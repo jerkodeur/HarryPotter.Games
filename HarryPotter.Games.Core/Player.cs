@@ -3,42 +3,40 @@
     /// <summary>
     /// Represents the player in the game
     /// </summary>
-    public class Player
+    public class Player : Character
     {
-        public const int DEFAULT_LIFEPOINTS = 100;
+        public string DefaultWeapon { get; set; } = string.Empty;
+        public int Age { get; init; }
+        private DateOnly birthday { get; set; }
 
-        public Player(DateOnly birthday)
+        public Player() : base() { }
+        public Player(string name, DateOnly birthday) : base(name)
         {
-            this.birthday = birthday;
-            this.setPlayerAge();
+            Age = setPlayerAge(birthday);
         }
 
-        public string Name { get; set; }
-        public string DefaultWeapon { get; set; }
-        public int Age { get; private set; }
-        private DateOnly birthday { get; set; }
-        private int LifePoints { get; set; } = DEFAULT_LIFEPOINTS;
-
-        private void setPlayerAge()
+        public Player(DateOnly birthday) : base()
         {
-            int age = DateTime.Now.Year - this.birthday.Year;
+            Age = setPlayerAge(birthday);
+        }
 
-            if(DateTime.Now.DayOfYear < this.birthday.DayOfYear)
+        private int setPlayerAge(DateOnly birthday)
+        {
+            this.birthday = birthday;
+
+            int age = DateTime.Now.Year - birthday.Year;
+
+            if(DateTime.Now.DayOfYear < birthday.DayOfYear)
             {
                 age -= 1;
             }
 
-            this.Age = age;
+            return age;
         }
 
-        public void Move()
+        public override string ToString()
         {
-            Console.WriteLineWithColors("Je me déplace", ConsoleColor.Yellow);
-        }
-        public void Attack(Ennemy ennemy, int damage)
-        {
-            Console.WriteLineWithColors($"{this.Name} attaque {ennemy.Name} et le blesse de {damage} points", ConsoleColor.Yellow);
-            ennemy.isAttacked(20);
+            return String.Format("Name: {0}, Age: {1}, DefaultWeapon: {2}, Position: {3}", Name, Age, DefaultWeapon, CurrentPosition.ToString());
         }
     }
 }
