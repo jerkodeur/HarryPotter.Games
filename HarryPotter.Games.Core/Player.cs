@@ -1,4 +1,6 @@
-﻿namespace HarryPotter.Games.Core
+﻿using JerkoLibs.Core.Date;
+
+namespace HarryPotter.Games.Core
 {
     /// <summary>
     /// Represents the player in the game
@@ -12,26 +14,7 @@
         public Player() : base() { }
         public Player(string name, DateOnly birthday) : base(name)
         {
-            Age = setPlayerAge(birthday);
-        }
-
-        public Player(DateOnly birthday) : base()
-        {
-            Age = setPlayerAge(birthday);
-        }
-
-        private int setPlayerAge(DateOnly birthday)
-        {
-            this.birthday = birthday;
-
-            int age = DateTime.Now.Year - birthday.Year;
-
-            if(DateTime.Now.DayOfYear < birthday.DayOfYear)
-            {
-                age -= 1;
-            }
-
-            return age;
+            Age = DateCalculators.getPlayerAge(birthday);
         }
 
         public override string ToString()

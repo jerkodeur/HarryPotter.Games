@@ -1,45 +1,58 @@
-﻿using System.Collections.Generic;
-using JerkoLibs.Core.Console.Menu;
+﻿using JerkoLibs.Core.Console.Menu;
+using System.Xml.Serialization;
 
 namespace HarryPotter.Games.Core
 {
-    public abstract class Force
+    [XmlInclude(typeof(LightForce))]
+    [XmlInclude(typeof(NeutreForce))]
+    [XmlInclude(typeof(ObscurForce))]
+    public class Force
     {
-        public MenuItem item { get; private set; }
-        public static string Question { get; } = "Avec quel coté de la force va tu commencer le jeu ?";
+        public MenuItem item { get; init; }
+        private string Question { get; } = "Avec quel coté de la force va tu commencer le jeu ?";
 
-        public static readonly List<Force> ForceList = new List<Force>
-        {
-            new NeutreForce(),
-            new LightForce(),
-            new ObscurForce()
-        };
+        private Menu<MenuItem> ForceMenu { get; set; }
+        public List<Force> Forces = new List<Force>();
+        public Force ? Selected { get; set; }
 
-        public Force() { }
+        #region Constructors
 
-        public Force(int id, string label)
+        public Force() 
+        { 
+            InitializeMenu();
+            InitializeForceList();
+        }
+
+        public Force(int id, string label) :base()
         {
             item = new MenuItem(id, label);
         }
 
-        private static Menu getMenu()
+        private void InitializeMenu()
         {
-            Menu forceMenu = new(Question);
-
-            foreach (Force force in ForceList)
+            ForceMenu = new Menu<MenuItem>(Question);
+            ForceMenu.Add(new NeutreForce().item);
+            ForceMenu.Add(new LightForce().item);
+            ForceMenu.Add(new ObscurForce().item);
+        }
+        private void InitializeForceList()
+        {
+            Forces = new List<Force>
             {
-                forceMenu.Items.Add(force.item);
-            }
-
-            return forceMenu;
+                new NeutreForce(),
+                new LightForce(),
+                new ObscurForce()
+            };
         }
 
-        public static Force GetPlayerSideForce()
+        public Force SetPlayerSideForce()
         {
-            int selectedForceId =  MenuHelper.GetMenuSelection(getMenu());
+            MenuItem itemSelected = ForceMenu.PromptUserToSelectOption();
+            Selected = Forces[itemSelected.Id];
 
-            return ForceList[selectedForceId];
-        }
+            return Selected;
+        } 
+        #endregion
 
         public override string ToString()
         {

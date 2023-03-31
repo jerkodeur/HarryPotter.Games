@@ -2,11 +2,6 @@
 {
     public class AgeNotValidException : Exception
     {
-        private string message = "L'age renseigné n'est pas valide !";
-
-        string GetMessage()
-        {
-            return message;
-        }
+        public new string Message = "Désolé mais tu n'as pas l'age pour jouer à ce jeu, reviens quand tu sera plus grand!";
     }
 }
