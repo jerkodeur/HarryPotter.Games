@@ -1,5 +1,5 @@
-﻿using HarryPotter.Games.Core.Interfaces;
-using JerkoLibs.Core.Common;
+﻿using HarryPotter.Games.Core.Models;
+using HarryPotter.Games.Core.Models.Force;
 using JerkoLibs.Core.Date;
 
 namespace HarryPotter.Games.Core
@@ -11,8 +11,11 @@ namespace HarryPotter.Games.Core
     {
         public string DefaultWeapon { get; set; } = string.Empty;
         public int Age { get; init; }
-        public new IForce? Force { get; set; }
+        public new AbstractForce? Force { get; set; }
         private DateOnly birthday { get; set; }
+        //public new event Action<Player>? IsDead;
+
+        public Player(): base() { }
 
         public Player(string name, DateOnly birthday) : base(name)
         {

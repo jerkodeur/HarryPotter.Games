@@ -1,49 +1,55 @@
 ﻿using HarryPotter.Games.Core.Exceptions;
-using JerkoLibs.Core.Common;
 using JerkoLibs.Core.Common.Interfaces;
 using JerkoLibs.Core.DataLayers.Interfaces;
 using JerkoLibs.Core.DataLayers;
 using JerkoLibs.Core.Date;
-using HarryPotter.Games.Core.Interfaces;
 
 namespace HarryPotter.Games.Core.Commandes.GameMenu
 {
     public class NewGameCommand : ICommand
     {
         #region Properties
-        private Game game = new(20,20);
+        private Game? game;
         const int MIN_AGE = 12;
-        private Player? player;
-        private Ennemy ennemy = new Ennemy("Comte Doku");
         #endregion
 
         #region MainMethod
         public void Execute()
         {
+            InitializeGame();
             QuickActions();
             //Actions();
-            //PlayerActions();
+            PlayerActions();
             //GetClassInfoInJson();
         }
         public void QuickActions()
         {
-            player = new Player("Jéjé", DateOnly.Parse("16/12/1977"));
-            player.Force = game.Force.SetPlayerSideForce();
-            game.grid.AddCharacterToPosition(new Position(1, 2), player);
-            game.grid.AddCharacterToPosition(new Position(1, 2), ennemy);
+            
+            game.grid.AddCharacterToPosition(new Position(1, 2), game.Player);
+            game.grid.AddCharacterToPosition(new Position(1, 2), game.Ennemies[0]);
 
             var busyCells = game.grid.GetBusyCells();
             var emptyCells = game.grid.GetEmptyCells();
             var charactersOnCell = game.grid.GetCharactersOnCell(new Position(1, 2));
-            var characterPosition = game.grid.GetCharacterPositionOnGrid(player);
-            var isCombatPossible = game.grid.IsFightPossibleOnCell(player, new Position(1, 2));
+            var characterPosition = game.grid.GetCharacterPositionOnGrid(game.Player);
+            var isCombatPossible = game.grid.IsFightPossibleOnCell(game.Player, new Position(1, 2));
             var isCellBusy = game.grid.IsCellBusy(new Position(1, 2));
-            var isPlayerOnCell = game.grid.IsCharacterOnCell(player, new Position(1, 1));
+            var isPlayerOnCell = game.grid.IsCharacterOnCell(game.Player, new Position(1, 1));
 
         }
 
-        public void Actions()
+        public void InitializeGame()
         {
+            Player player = new Player("Jéjé", DateOnly.Parse("16/12/1977"));
+            //Player player = GetFullPlayerInfos();
+            game = new(20, 20, player);            
+            player.Force = game.Force.SetPlayerSideForce();
+            game.NewEnnemy(new("Comte Doku"));
+        }
+
+        public Player GetFullPlayerInfos()
+        {
+            Player player = new();
             ConsoleConfirmationLine.WriteLine("Démarrage de la partie ...");
             string playerName = GetPlayerName();
             ConsoleConfirmationLine.WriteLine($"Bienvenue {playerName}");
@@ -69,7 +75,7 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
                 ConsoleErrorLine.WriteLine(ex.Message);
             }
 
-            player.Force = GetPlayerForce();
+            return player;
         }
         #endregion
 
@@ -92,28 +98,21 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
 
             return playerBirthday;
         }
-        private IForce GetPlayerForce()
-        {
-            return game.Force.SetPlayerSideForce();
-        }
 
         void PlayerActions()
         {
             ConsoleLine.WriteLine("\n");
-
-            ConsoleLine.WriteLine(player.CurrentPosition.ToString(), ConsoleColor.Yellow);
-            player.Move(new Position(2, 4));
-            player.Attack(ennemy, 20);
-            ennemy.Attack(player, 50);
-            player.Move(new RandomPositionCalculator(game.grid.Rows, game.grid.Cols));
-            player.Move(new StaticPositionCalculator());
-            ConsoleLine.WriteLine(player.CurrentPosition.ToString(), ConsoleColor.Yellow);
+            ConsoleLine.WriteLine(game.Player.CurrentPosition.ToString(), ConsoleColor.Yellow);
+            game.Player.Move(new RandomPositionCalculator(game.grid.Rows, game.grid.Cols));
+            game.Player.Attack(game.Ennemies[0], 100);
+            game.Ennemies[0].Attack(game.Player, 50);
+            game.Ennemies[0].Attack(game.Player, 60);
         }
 
         private void GetClassInfoInXml()
         {
             IDataLayer<Ennemy> saveEnnemy = new XmlDataLayer<Ennemy>(@"C:\Users\jerom\Documents\Dev\Tests", "player", "xml");
-            saveEnnemy.Write(ennemy);
+            saveEnnemy.Write(game.Ennemies[0]);
             var @object = saveEnnemy.Read(typeof(Ennemy));
             ConsoleLine.WriteLine(@object.ToString(), ConsoleColor.Green);
 
@@ -128,7 +127,7 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
             grid.Write(game.grid);
 
             //TODO See why an error occured 
-            //var readFile = grid.Read(typeof(Grid2D));
+            //var readFile = Grid.Read(typeof(Grid2D));
             //ConsoleLine.WriteLine(readFile.ToString(), ConsoleColor.Green);
 
             //IDataLayer<List<Force>> forces = new DataLayerSerialization<List<Force>>(@"C:\Users\jerom\Documents\Dev\Testsn", "force", "json");

@@ -1,4 +1,4 @@
-﻿using JerkoLibs.Core.Common;
+﻿using HarryPotter.Games.Core.Models;
 using JerkoLibs.Core.Common.Interfaces;
 using System.Collections;
 

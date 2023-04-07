@@ -15,6 +15,7 @@
 	<Using Include="JerkoLibs.Core.Console.Console" Alias="CoreConsole" />
 	<Using Include="JerkoLibs.Core" />
 	<Using Include="JerkoLibs.Core.Console" />
+	<Using Include="JerkoLibs.Core.Common" />
   </ItemGroup>
 
 </Project>
