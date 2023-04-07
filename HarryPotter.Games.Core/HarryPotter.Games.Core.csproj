@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\JerkoLibs.Core\JerkoLibs.Core.csproj" />
-    <ProjectReference Include="..\HarryPotter.Games.Core.Interfaces\HarryPotter.Games.Core.Interfaces.csproj" />
+    <ProjectReference Include="..\HarryPotter.Games.Core.Models\HarryPotter.Games.Core.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup Label="Usings">

@@ -1,6 +1,6 @@
 ﻿using JerkoLibs.Core.Common.Interfaces;
 
-namespace HarryPotter.Games.Core.Commandes.Game
+namespace HarryPotter.Games.Core.Commandes.GameMenu
 {
     public class DisplayCreditCommand : ICommand
     {

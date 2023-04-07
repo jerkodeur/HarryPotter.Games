@@ -1,8 +1,9 @@
-﻿namespace HarryPotter.Games.Core
+﻿using JerkoLibs.Core.Common;
+
+namespace HarryPotter.Games.Core
 {
-    public class Ennemy : Character
+    public class Ennemy : AbstractCharacter
     {
-        public Ennemy() : base() { }
         public Ennemy(string name) : base(name) { }
     }
 }

@@ -1,5 +1,4 @@
-﻿using HarryPotter.Games.Core.Commandes.Game;
-using HarryPotter.Games.Core.Commandes.GameMenu;
+﻿using HarryPotter.Games.Core.Commandes.GameMenu;
 using JerkoLibs.Core.Console.Menu;
 
 namespace HarryPotter.Games.Core.Menus

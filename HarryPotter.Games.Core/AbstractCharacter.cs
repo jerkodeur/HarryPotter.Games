@@ -1,27 +1,24 @@
-﻿using HarryPotter.Games.Core.Interfaces;
-using PlayerPosition = HarryPotter.Games.Core.Models.PlayerPosition;
+﻿using JerkoLibs.Core.Common;
+using JerkoLibs.Core.Common.Interfaces;
 
 namespace HarryPotter.Games.Core
 {
-    public abstract class Character
+    public abstract class AbstractCharacter
     {
         #region Class Params
-
         public const int DEFAULT_LIFEPOINTS = 100;
-
         public String Name { get; set; } = String.Empty;
-        public PlayerPosition CurrentPosition { get; set; } = new PlayerPosition();
+        public IPosition? CurrentPosition { get; set; }
         public int LifePoints { get; set; } = DEFAULT_LIFEPOINTS;
         public Force ? Force { get; set; }
-
         #endregion
 
-        // Appelle un autre constructeur
-        public Character() : this("Umber") { }
+        #region Constructors
+        public AbstractCharacter() : this("Umber") { }
+        public AbstractCharacter(string name) => Name = name; 
+        #endregion
 
-        public Character(string name) => Name = name;
-
-        #region Class Methods
+        #region Public Methods
 
         /// <summary>
         /// Allow the character to move
@@ -34,7 +31,7 @@ namespace HarryPotter.Games.Core
         /// <summary>
         /// Allow the character moving on a new position
         /// </summary>
-        public void Move(PlayerPosition position)
+        public void Move(IPosition position)
         {
             Move();
             this.CurrentPosition = position;
@@ -50,12 +47,13 @@ namespace HarryPotter.Games.Core
         /// </summary>
         /// <param name="ennemy"></param>
         /// <param name="damage"></param>
-        public void Attack(Character ennemy, int damage)
+        public void Attack(AbstractCharacter ennemy, int damage)
         {
             ConsoleLine.WriteLine($"{this.Name} attaque {ennemy.Name} pour {damage} points", ConsoleColor.Yellow);
             ennemy.takeDamages(damage);
         }
 
+        #region Private methods
         /// <summary>
         /// The character suffers damage
         /// </summary>
@@ -64,7 +62,8 @@ namespace HarryPotter.Games.Core
         {
             this.LifePoints -= damage;
             ConsoleLine.WriteLine($"{Name} possède désormais {this.LifePoints} points de vie !", ConsoleColor.Red);
-        }
+        } 
+        #endregion
 
         public override string ToString()
         {

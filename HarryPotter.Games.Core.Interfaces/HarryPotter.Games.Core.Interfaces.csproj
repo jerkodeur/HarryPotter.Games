@@ -6,12 +6,4 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\HarryPotter.Games.Core.Models\HarryPotter.Games.Core.Models.csproj" />
-	</ItemGroup>
-
-	<ItemGroup Label="Usings">
-		<Using Include="HarryPotter.Games.Core.Models" />
-	</ItemGroup>
-
 </Project>
