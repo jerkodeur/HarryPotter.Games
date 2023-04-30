@@ -5,14 +5,15 @@ using JerkoLibs.Core.Console;
 
 namespace HarryPotter.Games.Core.Models
 {
-    public abstract class AbstractCharacter
+    public abstract class Character
     {
         #region Class Params
 
+        public int Id { get; private set; }
         public const int DEFAULT_LIFEPOINTS = 100;
         public String Name { get; set; } = String.Empty;
         public IPosition CurrentPosition { get; set; } = new RandomPositionCalculator().Compute();
-        public AbstractForce? Force { get; set; }
+        public abstract ForceItem Force { get; set; }
         public int Dammage = 10;
         private int lifePoints = DEFAULT_LIFEPOINTS;
 
@@ -29,13 +30,14 @@ namespace HarryPotter.Games.Core.Models
             }
         }
 
-        public event Action<AbstractCharacter>? IsDead;
+
+        public event Action<Character>? IsDead;
 
         #endregion
 
         #region Constructors
-        public AbstractCharacter() : this("Umber") { }
-        public AbstractCharacter(string name)
+        public Character() : this("Umber") { }
+        public Character(string name)
         {
             Name = name;
             LifePoints = DEFAULT_LIFEPOINTS;
@@ -74,7 +76,7 @@ namespace HarryPotter.Games.Core.Models
         /// Allow the caracter to attack with default dammages
         /// </summary>
         /// <param name="ennemy"></param>
-        public void Attack(AbstractCharacter ennemy)
+        public void Attack(Character ennemy)
         {
             ennemy.takeDamages(ennemy.Dammage);
             DisplayDammage(ennemy, Dammage);
@@ -85,7 +87,7 @@ namespace HarryPotter.Games.Core.Models
         /// </summary>
         /// <param name="ennemy"></param>
         /// <param name="damage"></param>
-        public void Attack(AbstractCharacter ennemy, int damage)
+        public void Attack(Character ennemy, int damage)
         {
             bool isDifferentCharacter = this != ennemy && Name != ennemy.Name;
 
@@ -110,12 +112,12 @@ namespace HarryPotter.Games.Core.Models
             LifePoints -= damage;
         }
 
-        private void DisplayDammage(AbstractCharacter ennemy, int damage)
+        private void DisplayDammage(Character ennemy, int damage)
         {
             ConsoleLine.WriteLine($"{Name} attaque {ennemy.Name} pour {damage} points", ConsoleColor.Yellow);
         }
 
-        private void DisplayRemainingLifePoints(AbstractCharacter ennemy)
+        private void DisplayRemainingLifePoints(Character ennemy)
         {
             ConsoleLine.WriteLine($"Il reste {ennemy.LifePoints} points de vie à {ennemy.Name}", ConsoleColor.Yellow);
         }

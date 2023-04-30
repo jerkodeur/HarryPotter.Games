@@ -6,24 +6,27 @@ namespace HarryPotter.Games.Core
     public class Game
     {
         #region Properties
+        public int Id { get; set; }
         public GameGrid grid { get; private set; } = new(0, 0);
         public Force Force { get; init; } = new();
-        public AbstractCharacter Player { get; set; } = new Player();
+        public Player Player { get; set; } = new Player();
         public List<Ennemy> Ennemies { get; private set; } = new();
         private GameSettings settings { get; set; } = new(); 
         #endregion
         #region Constructors
-        public Game() { }
+        private Game() { }
 
-        public Game(int rows, int cols)
+        public Game (int id, int rows, int cols) : this(rows, cols)
         {
-            settings.Grid = new(rows, cols);
-            Init();
+            Id = id;
         }
+
+        public Game (int rows, int cols) : this(rows, cols, new Player()) { }
 
         public Game(int rows, int cols, Player player)
         {
             Player = player;
+            settings = new GameSettings(rows, cols);
             Init();
         }
         #endregion
@@ -33,6 +36,10 @@ namespace HarryPotter.Games.Core
         {
             Ennemies.Add(ennemy);
             ennemy.IsDead += CharacterIsDead;
+        }
+        public void SaveGame()
+        {
+            ConsoleConfirmationLine.WriteLine("Game saved");
         }
 
         #endregion
@@ -47,7 +54,7 @@ namespace HarryPotter.Games.Core
         /// Event triggered when a Character is dead
         /// </summary>
         /// <param name="character"></param>
-        private void CharacterIsDead(AbstractCharacter character)
+        private void CharacterIsDead(Character character)
         {
             if (character == Player)
             {

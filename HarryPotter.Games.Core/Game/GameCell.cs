@@ -4,15 +4,15 @@ using System.Collections;
 
 namespace HarryPotter.Games.Core
 {
-    public class GameCell : AbstractCell, ICell, IList<AbstractCharacter>
+    public class GameCell : AbstractCell, ICell, IList<Character>
     {
         #region Properties
 
-        public List<AbstractCharacter> Characters { get; private set; } = new List<AbstractCharacter>();
+        public List<Character> Characters { get; private set; } = new List<Character>();
 
         public int Count => Characters.Count();
         public bool IsReadOnly => false;
-        public AbstractCharacter this[int index] { get => Characters[index]; set => Characters[index] = value; } 
+        public Character this[int index] { get => Characters[index]; set => Characters[index] = value; } 
 
         #endregion
         #region Constructors
@@ -24,7 +24,7 @@ namespace HarryPotter.Games.Core
 
         public bool IsCellBusy() => Characters.Any();
         public bool IsCellEmpty() => !Characters.Any();
-        public bool IsCharacterOnCell(AbstractCharacter character) => Characters.Contains(character);
+        public bool IsCharacterOnCell(Character character) => Characters.Contains(character);
 
         #endregion
         #region Operators Override
@@ -35,12 +35,12 @@ namespace HarryPotter.Games.Core
         #endregion
         #region IList Implementation Methods
 
-        public int IndexOf(AbstractCharacter item)
+        public int IndexOf(Character item)
         {
             return Characters.IndexOf(item);
         }
 
-        public void Insert(int index, AbstractCharacter item)
+        public void Insert(int index, Character item)
         {
             Characters.Insert(index, item);
         }
@@ -50,7 +50,7 @@ namespace HarryPotter.Games.Core
             Characters.RemoveAt(index);
         }
 
-        public void Add(AbstractCharacter item)
+        public void Add(Character item)
         {
             Characters.Add(item);
         }
@@ -60,22 +60,22 @@ namespace HarryPotter.Games.Core
             Characters.Clear();
         }
 
-        public bool Contains(AbstractCharacter item)
+        public bool Contains(Character item)
         {
             return Characters.Contains(item);
         }
 
-        public void CopyTo(AbstractCharacter[] array, int arrayIndex)
+        public void CopyTo(Character[] array, int arrayIndex)
         {
             Characters.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(AbstractCharacter item)
+        public bool Remove(Character item)
         {
            return Characters.Remove(item);
         }
 
-        public IEnumerator<AbstractCharacter> GetEnumerator()
+        public IEnumerator<Character> GetEnumerator()
         {
             return Characters.GetEnumerator();
         }

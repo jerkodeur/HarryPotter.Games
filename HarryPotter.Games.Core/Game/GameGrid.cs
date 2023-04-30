@@ -6,7 +6,7 @@ namespace HarryPotter.Games.Core
     public class GameGrid : AbstractGrid, IList<GameCell>
     {
         #region Properties
-        private List<GameCell> Cells { get; init; } = new();
+        public List<GameCell> Cells { get; init; } = new();
         public int Count => Cells.Count;
         public bool IsReadOnly => false;
         public GameCell this[int index] { get => Cells[index]; set => Cells[index] = value; }
@@ -20,7 +20,7 @@ namespace HarryPotter.Games.Core
 
         #endregion
         #region Public Methods
-        public void AddCharacterToPosition(Position position, AbstractCharacter character)
+        public void AddCharacterToPosition(Position position, Character character)
         {
             if (IsCharacterOnCell(character, position) == false)
             {
@@ -35,7 +35,7 @@ namespace HarryPotter.Games.Core
             }
         }
 
-        public bool? IsCharacterOnCell(AbstractCharacter character, Position position)
+        public bool? IsCharacterOnCell(Character character, Position position)
         {
             return GetCell(position).SingleOrDefault()?.IsCharacterOnCell(character);
         }
@@ -49,12 +49,12 @@ namespace HarryPotter.Games.Core
         {
             return Cells.Where(cell => cell.IsCellBusy()).ToList();
         }
-        public List<AbstractCharacter>? GetCharactersOnCell(Position position)
+        public List<Character>? GetCharactersOnCell(Position position)
         {
             return GetCell(position).SingleOrDefault()?.Characters;
         }
 
-        public Position? GetCharacterPositionOnGrid(AbstractCharacter character)
+        public Position? GetCharacterPositionOnGrid(Character character)
         {
             IEnumerable<Position> query = from cell in GetBusyCells()
                                           where cell.IsCharacterOnCell(character)
@@ -67,7 +67,7 @@ namespace HarryPotter.Games.Core
             return GetCell(position).SingleOrDefault()?.IsCellBusy();
         }
 
-        public bool? IsFightPossibleOnCell(AbstractCharacter character, Position position)
+        public bool? IsFightPossibleOnCell(Character character, Position position)
         {
             return GetCell(position)
                 .Where(cell => cell.IsCharacterOnCell(character) && cell.Count > 1)

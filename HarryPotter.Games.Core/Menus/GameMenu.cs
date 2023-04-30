@@ -17,6 +17,7 @@ namespace HarryPotter.Games.Core.Menus
             menu.Add(new MenuItem(++id, "afficher les infos du jeu", new GameInfoCommand()));
             menu.Add(new MenuItem(++id, "nouvelle partie", new NewGameCommand()));
             menu.Add(new MenuItem(++id, "charger partie", new LoadGameCommand()));
+            menu.Add(new MenuItem(++id, "sauvegarder la partie", new SaveGameCommand()));
             menu.Add(new MenuItem(++id, "crédits", new DisplayCreditCommand()));
             menu.Add(new MenuItem(++id, "quitter", new ExitGameCommand()));
 

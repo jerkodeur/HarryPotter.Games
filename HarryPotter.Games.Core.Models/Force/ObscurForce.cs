@@ -1,8 +1,20 @@
-﻿namespace HarryPotter.Games.Core.Models.Force
+﻿using JerkoLibs.Core.Console.Menu;
+
+namespace HarryPotter.Games.Core.Models.Force
 {
-    public class ObscurForce : AbstractForce
+    public class ObscurForce : ForceItem
     {
-        public static string Label { get; } = "Force obscure";
-        public ObscurForce(int index) : base(index, Label) { }
+        public override string Label { get; init; } = "Force obscure";
+        public override int Id { get; init; } = 3;
+
+        public ObscurForce (int index)
+        {
+            item = new MenuItem(index, Label);
+        }
+
+        public ObscurForce ()
+        {
+            item = new MenuItem(Id, Label);
+        }
     }
 }

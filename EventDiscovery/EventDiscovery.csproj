@@ -7,9 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup ProjectReference="">
-    <ProjectReference Include="..\..\JerkoLibs.Core\JerkoLibs.Core.csproj" />
-    <ProjectReference Include="..\HarryPotter.Games.Core\HarryPotter.Games.Core.csproj" />
-  </ItemGroup>
-
 </Project>

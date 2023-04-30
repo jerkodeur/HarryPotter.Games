@@ -1,5 +1,4 @@
-﻿using HarryPotter.Games.Core.Interfaces;
-using HarryPotter.Games.Core.Models.Force;
+﻿using HarryPotter.Games.Core.Models.Force;
 using JerkoLibs.Core.Console.Menu;
 using System.Xml.Serialization;
 
@@ -13,7 +12,7 @@ namespace HarryPotter.Games.Core
         private string Question { get; } = "Avec quel coté de la force va tu commencer le jeu ?";
 
         private Menu<MenuItem> ForceMenu { get; set; }
-        public List<AbstractForce> Forces = new List<AbstractForce>();
+        public List<ForceItem> Forces = new List<ForceItem>();
 
         #region Constructors
 
@@ -36,7 +35,7 @@ namespace HarryPotter.Games.Core
         {
             int index = 0;
 
-            Forces = new List<AbstractForce>
+            Forces = new List<ForceItem>
             {
                 new LightForce(++index),
                 new NeutreForce(++index),
@@ -44,7 +43,7 @@ namespace HarryPotter.Games.Core
             };
         }
 
-        public AbstractForce SetPlayerSideForce()
+        public ForceItem SetPlayerSideForce()
         {
             MenuItem selection = ForceMenu.PromptUserToSelectOption();
 

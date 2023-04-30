@@ -2,6 +2,7 @@
 {
     public interface IForce
     {
-        public string Question { get; init; }
+        public int Id { get; init; }
+        public string Label { get; init; }
     }
 }

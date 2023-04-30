@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Jéjé": {
+      "commandName": "Project",
+      "commandLineArgs": "testargs=12"
+    }
+  }
+}

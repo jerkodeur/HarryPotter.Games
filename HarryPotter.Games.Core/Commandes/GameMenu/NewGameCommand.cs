@@ -1,7 +1,6 @@
-﻿using HarryPotter.Games.Core.Exceptions;
+﻿using System.Data.SqlClient;
+using HarryPotter.Games.Core.Exceptions;
 using JerkoLibs.Core.Common.Interfaces;
-using JerkoLibs.Core.DataLayers.Interfaces;
-using JerkoLibs.Core.DataLayers;
 using JerkoLibs.Core.Date;
 
 namespace HarryPotter.Games.Core.Commandes.GameMenu
@@ -9,7 +8,7 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
     public class NewGameCommand : ICommand
     {
         #region Properties
-        private Game? game;
+        private Game game;
         const int MIN_AGE = 12;
         #endregion
 
@@ -20,6 +19,7 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
             QuickActions();
             //Actions();
             PlayerActions();
+            SaveGame();
             //GetClassInfoInJson();
         }
         public void QuickActions()
@@ -40,7 +40,7 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
 
         public void InitializeGame()
         {
-            Player player = new Player("Jéjé", DateOnly.Parse("16/12/1977"));
+            Player player = new Player("Jéjé", "jeep.pounet@gmail.com", DateOnly.Parse("16/12/1977"));
             //Player player = GetFullPlayerInfos();
             game = new(20, 20, player);            
             player.Force = game.Force.SetPlayerSideForce();
@@ -53,17 +53,17 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
             ConsoleConfirmationLine.WriteLine("Démarrage de la partie ...");
             string playerName = GetPlayerName();
             ConsoleConfirmationLine.WriteLine($"Bienvenue {playerName}");
+            string playerEmail = GetPlayerEmail();
 
             DateOnly birthday = GetPlayerBirthday();
             int age = DateCalculators.getPlayerAge(birthday);
-
 
             try
             {
                 if (hasTheRequiredAge(age))
                 {
                     ConsoleConfirmationLine.WriteLine($"Tu as donc {age} ans! Tu peux jouer à ce jeu!!!");
-                    player = new Player(playerName, birthday);
+                    player = new Player(playerName, playerEmail, birthday);
                 }
                 else
                 {
@@ -83,6 +83,11 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
         private string GetPlayerName()
         {
             return CoreConsole.GetUserInput("Quel est ton nom ?");
+        }
+
+        private string GetPlayerEmail ()
+        {
+            return CoreConsole.GetUserInput("Quel est ton adresse e-mail ?");
         }
 
         private DateOnly GetPlayerBirthday()
@@ -109,12 +114,25 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
             game.Ennemies[0].Attack(game.Player, 60);
         }
 
+        private void SaveGame()
+        {
+            try
+            {
+                new SaveGameCommand().Execute(game);
+                ConsoleConfirmationLine.WriteLine("La partie a été sauvegardée!");
+            }
+            catch(SqlException e) when (e.GetType() == typeof(SqlException))
+            {
+                ConsoleErrorLine.WriteLine($"Une erreur SQL est survenue: {e.Message}");
+            }
+        }
+
         private void GetClassInfoInXml()
         {
-            IDataLayer<Ennemy> saveEnnemy = new XmlDataLayer<Ennemy>(@"C:\Users\jerom\Documents\Dev\Tests", "player", "xml");
-            saveEnnemy.Write(game.Ennemies[0]);
-            var @object = saveEnnemy.Read(typeof(Ennemy));
-            ConsoleLine.WriteLine(@object.ToString(), ConsoleColor.Green);
+            //IDataLayer<Ennemy> saveEnnemy = new XmlDataLayer<Ennemy>(@"C:\Users\jerom\Documents\Dev\Tests", "player", "xml");
+            //saveEnnemy.Write(game.Ennemies[0]);
+            //var @object = saveEnnemy.Read(typeof(Ennemy));
+            //ConsoleLine.WriteLine(@object.ToString(), ConsoleColor.Green);
 
             //TODO See how don't serialize some class properties (ex interfaces)
             //IDataLayer<List<Force>> forces = new DataLayerSerialization<List<Force>>(@"C:\Users\jerom\Documents\Dev\Testsn", "force", "xml");
@@ -123,8 +141,8 @@ namespace HarryPotter.Games.Core.Commandes.GameMenu
 
         private void GetClassInfoInJson()
         {
-            IDataLayer<GameGrid> grid = new JsonDataLayer<GameGrid>(@"C:\Users\jerom\Documents\Dev\Tests", "grid", "json");
-            grid.Write(game.grid);
+            //IDataLayer<GameGrid> grid = new JsonDataLayer<GameGrid>(@"C:\Users\jerom\Documents\Dev\Tests", "grid", "json");
+            //grid.Write(game.grid);
 
             //TODO See why an error occured 
             //var readFile = Grid.Read(typeof(Grid2D));
